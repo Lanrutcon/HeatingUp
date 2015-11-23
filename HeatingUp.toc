@@ -1,0 +1,9 @@
+## Title: HeatingUp
+## Version: 1.0
+## Interface: 40300
+## Author: Lanrutcon
+## DefaultState: Enabled
+## Notes: Warns you when you crit with a fire spell
+## SavedVariables: HeatingUpSV
+
+HeatingUp.lua 
