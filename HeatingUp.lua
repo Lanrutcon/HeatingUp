@@ -89,7 +89,7 @@ Addon:SetScript("OnEvent", function(self, event, ...)
 			local point, relativePoint, x, y = frameAnchor:GetPoint();
 			HeatingUpSV[UnitName("player")] = { point, relativePoint, x, y};
 		end
-	else
+	elseif(event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		local time, type, _, _, sourceName, _, _, _, _, _, _, spellID, spellName, _, _, _, _, _, _, _, critical = ...;
 		if(type == "SPELL_AURA_APPLIED" and sourceName == UnitName("player") and (spellID == 48108 or spellID == 87160)) then
 			print("Hot Streak is up!");
@@ -99,13 +99,17 @@ Addon:SetScript("OnEvent", function(self, event, ...)
 				print("crit'ed with " .. spellName);
 				frameIcon:Show();
 			else
-				print("missed crit'ed with " .. spellName);
+				print("missed crit with " .. spellName);
 				frameIcon:Hide();
 			end
 		end
+	else -- (event == "PLAYER_DEAD") or (event == "PLAYER_ENTERING_WORLD") then
+		frameIcon:Hide();
 	end
 end)
 
 
 Addon:RegisterEvent("VARIABLES_LOADED");
 Addon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+Addon:RegisterEvent("PLAYER_DEAD");
+Addon:RegisterEvent("PLAYER_ENTERING_WORLD");
