@@ -4,28 +4,25 @@ local frameAnchor;
 local frameIcon;
 
 local spellTable = {
-	Pyroblast = 1,
-	Scorch = 1,
-	Fireblast = 1,
-	FrostfireBolt = 1,
-	MindBlast = 1,
-	MindSpike = 1
+	[133] = true,
+	[11366] = true,
+	[2948] = true,
+	[2136] = true,
+	[44614] = true,
 };
 
 
 local function setFrameIcon()
-	frameIcon = CreateFrame("FRAME", nil, UIParent);
+	frameIcon = CreateFrame("FRAME", "FrameIcon", UIParent, "SpellActivationOverlayTemplate");
 	frameIcon:SetSize(32, 32);
 	frameIcon:SetPoint("TOPLEFT", frameAnchor, 0, 0);
 
 	frameIcon.icon = frameIcon:CreateTexture("IconTexture", "BACKGROUND");
-	frameIcon.icon:SetWidth(64);
-	frameIcon.icon:SetHeight(64);
 	frameIcon.icon:SetPoint("CENTER", 0, 0);
-	frameIcon.icon:SetTexture("Interface\\ICONS\\Ability_mage_hotstreak.png");
+	frameIcon.icon:SetTexture("TEXTURES\\SPELLACTIVATIONOVERLAYS\\HOT_STREAK.BLP");
 
 	frameIcon:Hide();
-
+	
 	return frameIcon;
 end
 
@@ -39,12 +36,10 @@ local function initFrameAnchor()
 	frameAnchor.icon:SetWidth(32)
 	frameAnchor.icon:SetHeight(32)
 	frameAnchor.icon:SetPoint("TOPLEFT", 0, 0)
-	frameAnchor.icon:SetTexture("Interface\\ICONS\\Ability_mage_hotstreak.png");
-
+	frameAnchor.icon:SetTexture("Interface\\UnitPowerBarAlt\\Generic1Target_Circular_Frame.png");
 
 	frameAnchor:EnableMouse(true)
 	frameAnchor:SetMovable(true);
-
 
 	frameAnchor:SetScript("OnMouseDown", function(self, button)
 		if(button == "LeftButton") then
@@ -91,15 +86,12 @@ Addon:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif(event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		local time, type, _, _, sourceName, _, _, _, _, _, _, spellID, spellName, _, _, _, _, _, _, _, critical = ...;
-		if(type == "SPELL_AURA_APPLIED" and sourceName == UnitName("player") and (spellID == 48108 or spellID == 87160)) then
-			print("Hot Streak is up!");
+		if(type == "SPELL_AURA_APPLIED" and sourceName == UnitName("player") and spellID == 48108) then
 			frameIcon:Hide();
-		elseif(type == "SPELL_DAMAGE" and sourceName == UnitName("player") and spellTable[string.gsub(spellName, "%s+", "")]) then
+		elseif(type == "SPELL_DAMAGE" and sourceName == UnitName("player") and spellTable[spellID]) then
 			if(critical) then
-				print("crit'ed with " .. spellName);
 				frameIcon:Show();
 			else
-				print("missed crit with " .. spellName);
 				frameIcon:Hide();
 			end
 		end
